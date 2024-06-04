@@ -29,6 +29,10 @@ public class CourseService {
         courseDAO.deleteCourse(id);
     }
 
+    public void updateCourse(Course course) throws SQLException{
+        courseDAO.updateCourse(course);
+    }
+
     public List<Course> listCourses() {
         try {
             return courseDAO.listCourses();

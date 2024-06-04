@@ -24,6 +24,20 @@ public class CourseDAO {
         }
     }
 
+    public void updateCourse(Course course) throws SQLException{
+        String query = "UPDATE courses SET subject_id=?, tutor_id =?, schedule =? WHERE id = ?";
+        try(PreparedStatement statement = connection.prepareStatement(query)){
+            statement.setInt(1,course.getSubjectId());
+            statement.setInt(2,course.getTutorId());
+            statement.setString(3,course.getSchedule());
+            statement.setInt(4,course.getId());
+            int row = statement.executeUpdate();
+            if(row>0){
+                System.out.println("Updated Successfully..");
+            }
+        }
+    }
+
     public void deleteCourse(int courseId) throws SQLException {
         String deleteEnrollmentsQuery = "DELETE FROM enrollments WHERE course_id = ?";
         String deleteCourseQuery = "DELETE FROM courses WHERE id = ?";
@@ -42,7 +56,7 @@ public class CourseDAO {
                 System.out.println("Course and related enrollments deleted successfully!");
             } else if (result == 0) {
                 System.out.println("Course id is not found...." +
-                        "\n Please try with another id.."
+                        "\nPlease try with another id.."
                 );
             }
         }

@@ -21,11 +21,13 @@ public class Main {
         System.out.println("8. Delete Courses");
 
         System.out.println("9. List Courses");
-        System.out.println("10. Enroll Student");
-        System.out.println("11. View all Enrolled Students");
+        System.out.println("10. Update Course");
 
-        System.out.println("12. Add Teacher");
-        System.out.println("13. View all Teachers");
+        System.out.println("11. Enroll Student");
+        System.out.println("12. View all Enrolled Students");
+
+        System.out.println("13. Add Teacher");
+        System.out.println("14. View all Teachers");
 
         System.out.println("0. Logout");
 
@@ -56,6 +58,20 @@ public class Main {
         cli.userCommand(input1);
     }
 
+    public static void authUser() throws SQLException{
+        UserService us = new UserService();
+        if(us.authU()){
+            studentMain();
+        }
+    }
+
+    public static void authteach() throws SQLException {
+        TeacherService tu = new TeacherService();
+        if(tu.authT()){
+            teacherMain();
+        }
+    }
+
 
     public static void launch() throws SQLException {
         Scanner sc = new Scanner(System.in);
@@ -76,7 +92,7 @@ public class Main {
                     teacherMain();
                 }
                 while (!ts.authT()) {
-                    return;
+                    authteach();
                 }
                 break;
 
@@ -87,7 +103,7 @@ public class Main {
                 }
 
                 while (!us.authU()) {
-//                    vendorAuthentication();
+                    authUser();
                 }
                 break;
 

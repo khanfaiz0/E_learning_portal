@@ -56,18 +56,25 @@ public class CLI {
                 Main.teacherMain();
                 break;
             case 10:
+                updateCourse();
+                Main.teacherMain();
+            case 11:
                 enrollStudent();
                 Main.teacherMain();
                 break;
-            case 11:
+            case 12:
                 listEnrollments();
                 Main.teacherMain();
-            case 12:
+            case 13:
                 addTeacher();
                 Main.teacherMain();
                 break;
-            case 13:
+            case 14:
                 listTeachers();
+                Main.teacherMain();
+                break;
+            case 15:
+                dltTeacher();
                 Main.teacherMain();
                 break;
             default:
@@ -131,7 +138,18 @@ public class CLI {
     }
 
     private void listUsers() {
-        userService.listUsers().forEach(System.out::println);
+        String format = "| %-15s | %-20s | %-20s |%n";
+
+        // Print the table header
+        System.out.format("+-----------------+----------------------+----------------------+%n");
+        System.out.format("| Student ID      | student Name         | Student Email        |%n");
+        System.out.format("+-----------------+----------------------+----------------------+%n");
+
+        userService.listUsers().forEach(e->{
+            System.out.format(format,e.getId(),e.getName(),e.getEmail());
+        });
+        System.out.format("+-----------------+----------------------+----------------------+%n");
+
     }
 
     private void addSubject() {
@@ -142,15 +160,29 @@ public class CLI {
         subjectService.addSubject(new Subject(name, description));
     }
 
+
+
     private void listSubjects() {
-        subjectService.listSubjects().forEach(System.out::println);
+        String format = "| %-15s | %-20s | %-35s |%n";
+
+        // Print the table header
+        System.out.format("+-----------------+----------------------+-------------------------------------+%n");
+        System.out.format("| Subject ID      | Subject Name         | Subject Description                 |%n");
+        System.out.format("+-----------------+----------------------+-------------------------------------+%n");
+
+        subjectService.listSubjects().forEach(e->{
+            System.out.format(format,e.getId(),e.getName(),e.getDescription());
+        });
+        System.out.format("+-----------------+----------------------+-------------------------------------+%n");
+
     }
 
     private void addCourse() {
         listSubjects();
         System.out.print("Enter subject ID from above table: ");
         int subjectId = scanner.nextInt();
-        System.out.print("Enter tutor ID: ");
+        listTeachers();
+        System.out.print("Enter tutor ID from above table: ");
         int tutorId = scanner.nextInt();
         scanner.nextLine(); // consume newline
         System.out.print("Enter schedule (YYYY-MM-DD HH:MM:SS): ");
@@ -158,8 +190,33 @@ public class CLI {
         courseService.addCourse(new Course(subjectId, tutorId, schedule));
     }
 
+    private void updateCourse() throws SQLException{
+        listCourses();
+        System.out.println("Enter Course Id from above table to update it");
+        int id = scanner.nextInt();
+
+        scanner.nextLine();
+        System.out.println("Choose subject id from below table");
+        listSubjects();
+        int sub_id = scanner.nextInt();
+        scanner.nextLine();
+
+        System.out.println("choose tutor id from below table");
+        listTeachers();;
+        int tutor_id = scanner.nextInt();
+        scanner.nextLine();
+        System.out.print("Enter schedule (YYYY-MM-DD HH:MM:SS):");
+        String schedule = scanner.nextLine();
+        courseService.updateCourse(new Course(id,sub_id,tutor_id,schedule));
+
+
+
+
+    }
+
     private void dltcourse() throws SQLException{
-        System.out.println("Enter Course Id to delete Course:");
+        listCourses();
+        System.out.println("Enter Course Id from above table to delete Course:");
         int id = scanner.nextInt();
         courseService.dltcourse(id);
     }
@@ -206,15 +263,28 @@ public class CLI {
 
     }
 
-    private void addTeacher() {
+    private void addTeacher() throws SQLException {
+        Subject sub = null;
         System.out.print("Enter name: ");
         String name = scanner.nextLine();
         System.out.print("Enter email: ");
         String email = scanner.nextLine();
         System.out.print("Enter subject ID: ");
         int subjectId = scanner.nextInt();
+        sub = subjectService.getSubbyid(subjectId);
+        if(sub == null){
+            System.out.println("Enter a valid subject Id for Teacher.");
+            return;
+        }
         scanner.nextLine(); // consume newline
         teacherService.addTeacher(new Teacher(name, email, subjectId));
+    }
+
+    private void dltTeacher() throws SQLException{
+        listTeachers();
+        System.out.println("select teacher id from above table to delete");
+        int id = scanner.nextInt();
+        teacherService.dltteacher(id);
     }
 
     private void listTeachers() {

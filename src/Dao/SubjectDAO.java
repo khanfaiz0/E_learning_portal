@@ -38,5 +38,23 @@ public class SubjectDAO {
         }
         return subjects;
     }
+
+    public Subject getSubById(int id) throws SQLException {
+        Subject sub = null;
+        String query = "SELECT * FROM subjects WHERE id = ?";
+        try (PreparedStatement statement = connection.prepareStatement(query)) {
+            statement.setInt(1, id);
+            ResultSet resultSet = statement.executeQuery();
+            if (resultSet.next()) {
+                sub = new Subject(
+                        resultSet.getInt("id"),
+                        resultSet.getString("name"),
+                        resultSet.getString("description")
+                );
+            }
+        }
+        return sub;
+    }
+
 }
 

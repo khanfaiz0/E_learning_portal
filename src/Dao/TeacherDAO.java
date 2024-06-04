@@ -41,7 +41,23 @@ public class TeacherDAO {
             statement.setString(1, teacher.getName());
             statement.setString(2, teacher.getEmail());
             statement.setInt(3, teacher.getSubjectId());
-            statement.executeUpdate();
+            int row = statement.executeUpdate();
+            if(row > 0){
+                System.out.println("Teacher Added Successfully...");
+            }
+        }
+    }
+
+    public void deleteTeacher(int teacherId) throws SQLException {
+        String query = "DELETE FROM teachers WHERE id = ?";
+        try (PreparedStatement statement = connection.prepareStatement(query)) {
+            statement.setInt(1, teacherId);
+            int rowsDeleted = statement.executeUpdate();
+            if (rowsDeleted > 0) {
+                System.out.println("Teacher Deleted Successfully...");
+            } else {
+                System.out.println("No teacher found with the given ID.");
+            }
         }
     }
 
@@ -60,6 +76,7 @@ public class TeacherDAO {
                 ));
             }
         }
+
         return teachers;
     }
 }

@@ -17,6 +17,10 @@ public class SubjectService {
         }
     }
 
+    public Subject getSubbyid(int id) throws SQLException{
+        return subjectDAO.getSubById(id);
+    }
+
     public void addSubject(Subject subject) {
         try {
             subjectDAO.addSubject(subject);

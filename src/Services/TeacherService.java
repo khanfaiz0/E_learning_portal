@@ -51,6 +51,10 @@ public class TeacherService {
         }
     }
 
+    public void dltteacher(int id) throws SQLException{
+        teacherDAO.deleteTeacher(id);
+    }
+
     public List<Teachers> listTeachers() {
         try {
             return teacherDAO.listTeachers();
